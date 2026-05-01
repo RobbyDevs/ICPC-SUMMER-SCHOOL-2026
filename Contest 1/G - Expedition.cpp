@@ -2,9 +2,20 @@
 using namespace std;
 typedef long long ll;
 
+void ppq(    priority_queue<pair<ll,ll>>pqfila){
+    
+    while(pqfila.size()){
+        pair<ll,ll> x = pqfila.top();
+        pqfila.pop();
+        cout<<x.first<<" "<<x.second<<" | ";
+    }
+    cout<<endl;
+    
+
+}
 void pg(vector<pair<ll,ll>>&v){
 
-    for (auto x : v){
+    for (pair<ll,ll> x : v){
         cout<<x.first<<" "<<x.second<<" | ";
     }
     cout<<endl;
@@ -35,28 +46,42 @@ void solve(){
     ll pos = 0;
     ll ans = 0;
     
-    for(auto ponto:va){
+
+    //pg(va);
+    for(pair<ll,ll> ponto:va){
         
         if (pos+comb >= ponto.first){
             // vira -> first = combXtra  | second =  posicao
-            pqfila.push({ponto.first,ponto.second});
+            pqfila.push({ponto.second,ponto.first});
+            
             //cout<<"add ponto"<<endl;
         }
         
-        
         else{
+
+            while(! (pos+comb >= ponto.first)){
+
+                if (!pqfila.size()){
+                    cout<<-1<<endl;
+                    return;
+                }
+                pair<ll,ll> parada = pqfila.top();
+                //cout<<"escolhido: "<< parada.second<<" "<<parada.first<<endl;
+                pqfila.pop();
+                
+                comb = parada.second + ( comb - (parada.first-pos));
+                pos = parada.first;
+                ans++;
+
+                pqfila.push({ponto.second,ponto.first});
+
+            }
             
-            pair<ll,ll> parada = pqfila.top();
-            //cout<<"escolhido: "<< parada.first<<" "<<parada.second<<endl;
-            pqfila.pop();
             
-            comb = parada.first + ( comb - (parada.second-pos));
-            pos = parada.second;
-            ans++;
             
         }
-        
-        
+        //cout<<"pq: ";
+        //ppq(pqfila);
         //cout<<"pos: "<<pos<<"| comb: "<<comb<<endl;
 
     }
@@ -87,5 +112,5 @@ int main(){
 5 2
 11 5
 15 10
-25 10a
+25 10
 */
